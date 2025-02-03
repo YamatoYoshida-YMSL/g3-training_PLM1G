@@ -1,0 +1,10 @@
+# .gitkeep
+
+- Place your custom Vue components in this folder.
+- Use the components directly in your Vue template without importing it:
+
+  <template>
+    <MyComponent />
+  </template>
+
+Note: This file can be deleted once the folder contains other files.

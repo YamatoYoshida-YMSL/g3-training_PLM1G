@@ -1,26 +1,36 @@
-
-
-
 <script setup>
-import { useLockScreen, IconSearch, IconPlus, IconDownload, IconUpload, IconDelete, IconCheck, IconClose, } from 'viy-ui';
+import { IconCheck, IconClose, IconDelete, IconDownload, IconEdit, IconPlus, IconSearch, useLockScreen } from 'viy-ui';
 import { useI18n } from 'vue-i18n';
+import { get, merge } from 'lodash-es';
 import { useApi } from '@/composables/useApi';
-
-    import { get } from 'lodash-es';
 
 const { t } = useI18n();
 const { lockScreen } = useLockScreen();
 
+const updateFlag = ref(false);
+
+const validateEmail = (rule, value, callback) => {
+  if (value) {
+    const emailRegExp = /^[a-zA-Z0-9_\-]+@[a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)+$/;
+    if (!emailRegExp.test(value)) {
+      callback(new Error(t('M.E.000002')));
+    } else {
+      callback();
+    }
+  } else {
+    callback();
+  }
+};
 const doUpdate = (row) => {
   detailVisible.value = true;
   updateFlag.value = true;
-  //The first time you open the side, you need to initialize the form controls in the side
-  //Otherwise, calling the resetFields method later to reset the value is incorrect
+  // The first time you open the side, you need to initialize the form controls in the side
+  // Otherwise, calling the resetFields method later to reset the value is incorrect
   nextTick(() => {
     detailForm.value && detailForm.value.resetFields();
     merge(detailFormData, row);
-  })
-}
+  });
+};
 const doDelete = (row) => {
   VueMessageBox.confirm(t('M.W.000001'), 'Warning', {
     confirmButtonText: 'OK',
@@ -29,2094 +39,919 @@ const doDelete = (row) => {
   }).then(() => {
     deleteDsApi.runAsync({
       companyCd: row.companyCd,
-      employeeCd: row.employeeCd
+      employeeCd: row.employeeCd,
     });
-  })
-        
+  });
+};
+
 defineOptions({
   name: 'employee01',
 });
-    
+
 const form = ref();
-const conditionArea = ref();
-const viy2Button_HRUAX = ref();
+const viy2Panel_KEd7N = ref();
+const viy2Row_KG6RZ = ref();
+const searchBtn = ref();
 const conditionForm = ref();
-const viy2Row_Ha4HQ = ref();
+const conditionRow = ref();
 const joinDate = ref();
 const employeeCd = ref();
 const gender = ref();
-const detailedList = ref();
-const viy2Button_HRWV9 = ref();
-const viy2Button_74HSsU = ref();
-const viy2Button_74HB0k = ref();
-const viy2Table_Hvba2 = ref();
-const viy2Table_Hvba2Pagination = ref();
+const viy2Panel_KFRLT = ref();
+const viy2Row_LSq40 = ref();
+const addBtn = ref();
+const downloadExcelBtn = ref();
+const downloadPDFBtn = ref();
+const viy2Table = ref();
+const viy2TablePagination = ref();
 const viy2Aside = ref();
 const detailForm = ref();
-const detail = ref();
-const viy2Row_IETqp = ref();
+const viy2Panel_MdFgd = ref();
 const companyCd = ref();
-const viy2Row_7cFC2O = ref();
-const detailEmployeeCd = ref();
-const viy2Row_7cFAxA = ref();
-const detailEmployeeNm = ref();
-const viy2Row_7cFz6I = ref();
-const detailJoinDate = ref();
-const viy2Row_7cFxwu = ref();
+const viy2InputBox_1gKHrE = ref();
+const viy2InputBox_7zeCIo = ref();
+const viy2DateTimePicker_XCKaH = ref();
 const groupCd = ref();
-const viy2Row_7cFvXI = ref();
-const detailGender = ref();
-const viy2Row_7cEufe = ref();
-const email = ref();
-const viy2Row_7dfh6W = ref();
-const save = ref();
-const cancel = ref();
-
+const viy2Radio_L4DEv = ref();
+const viy2InputBox_L4QZw = ref();
+const viy2Row_7Xunbi = ref();
+const saveBtn = ref();
+const cancelBtn = ref();
 
 const formData = reactive({
 });
-    
-  	const conditionFormData = reactive({
-      		joinDate: '' ,  employeeCd: '' ,  gender: '' 
-    });
-           	const detailFormData = reactive({
-      		datafieldviy2InputBox_IFaWa: '' ,  datafieldviy2InputBox_IFaWa: '' ,  datafieldviy2InputBox_IFaWa: '' ,  datafieldviy2DateTimePicker_II595: '' ,  datafieldviy2Select_IIkUm: '' ,  datafieldviy2Radio_IIxiA: '' ,  datafieldviy2InputBox_IFaWa: '' 
-    });
 
-    
+    	const conditionFormData = reactive({
+      		joinDate: [], employeeCd: '', gender: '',
+});
+             	const detailFormData = reactive({
+      		companyCd: '01', employeeCd: '', employeeNm: '', joinDate: '', groupCd: '', gender: '', mailAddress: '',
+});
+
 const rules = reactive({
-  detailEmployeeCdRules: [
-          {
-                  required:true
+  viy2InputBox_1gKHrERules: [
+    {
+      required: true,
 
-,                  message: computed(() => { return t('validation.error.required'); })
+      message: computed(() => {
+        return t('M.E.000001');
+      }),
 
-          }
-          
-        ]
-        
-});
-    
+    },
 
-    
-    const detailvisible = ref(false);
-    
+  ],
+  groupCdRules: [
+    {
+      required: true,
 
-            
- 
+      message: computed(() => {
+        return t('M.E.000004');
+      }),
 
+    },
 
-  
-    
+  ],
+  viy2InputBox_L4QZwRules: [
+    {
+      validator: validateEmail,
 
-            
+      trigger: 'manual',
 
-	
+    },
 
-	
+  ],
 
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-
-	
-
-	
-
-   
-
-      
-
-
-
-
-
-
-
-
-
-
-
-
-            
-
-	
-
-	
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
- 
-
-
-
- 
-    const groupCdOpts = reactive([
-                {
-      				label:
-      					'Option 1'
-,
-      				value:
-      					'Option 1'
-      			},
-                {
-      				label:
-      					'Option 2'
-,
-      				value:
-      					'Option 2'
-      			},
-                {
-      				label:
-      					'Option 3'
-,
-      				value:
-      					'Option 3'
-      			},
-    ]);
-
-
-
-
-
-
-
-
-
-
-
-
-                
-
-
-
-
- const detailGenderOpts = reactive([
-                {
-value: "Option 1" ,label: "Option 1"      			},
-                {
-value: "Option 2" ,label: "Option 2"      			},
-                {
-value: "Option 3" ,label: "Option 3"      			}
-    ])
-
-
-
-
-
-
-
-
-
-
-
-            
-
-	
-
-	
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-
-
-
-  
-
-
-
-
-    
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-    
- 
-
-
-  
-        
-
-
-
-  
-
-
-
-
-
-
-                
-
-
-
-
-
-
-
-
-
-        
-
-	
-
-	
-
-   
-
-
-
-
-
-
-
-
-            
-
-
-
-
- const genderOpts = reactive([
-                {
-value: "all" ,label: "all"      			},
-                {
-value: "male" ,label: "male"      			},
-                {
-value: "female" ,label: "female"      			}
-    ])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-  
-        
-
-
-
-  
-
-
-
-
-    
-
-
-
-  
-
-
-
-
-    
-
-
-
-  
-
-
-
-
-
-
-    
-
-
-  
-
-
-
-
-const viy2Table_Hvba2EditConfig = reactive({
-     trigger: 'click'
-
-     
-     
-     
 });
 
+const detailVisible = ref(false);
 
+const genderOpts = reactive([
+  { value: '', label: 'all' },
+  { value: '0', label: 'male' },
+  { value: '1', label: 'female' },
+]);
 
-
-
-  
-  
-
-const viy2Table_Hvba2MouseConfig = reactive({
-    
-    
-    extension: true
+const viy2TableEditConfig = reactive({
 
 });
-  
-  
 
+const viy2TableMouseConfig = reactive({
 
+  extension: true,
 
-  
-  
+});
 
+const viy2TableCurrentPage = ref(1);
+const viy2TablePageSize = ref(10);
 
-const viy2Table_Hvba2CurrentPage = ref(1);
-const viy2Table_Hvba2PageSize = ref(10);
+const viy2TableOperateButtons = (scope) => {
+  return [
+    {
+      label: '',
+      size: 'small',
+      type: 'text',
 
+      icon: IconEdit,
+      click: doUpdate,
 
+    },
+    {
+      label: '',
+      size: 'small',
+      type: 'text',
 
+      icon: IconDelete,
+      click: doDelete,
 
-
-  
-    
-
-    
-
-    
-
-
-
-
- 
-
-
-
-
-
-    
-
-
-
-
- 
-
-
-
-
-
-    
-
-
-
-
- 
-
-
-
-
-
-    
-
-
-
-
- 
-
-
-
-
-
-    
-
-
-
-
- 
-
-
-
-
-
-    
-
-
-
-
- 
-
-
-
-
-
-    
-
-
-const viy2Table_Hvba2OperateButtons = (scope) => {
-
-      return [ 
-          {
-              label:'update'
-              ,size: 'small' 
-              ,type: 'text' 
-               
-              ,icon:  IconUpload
-              ,click: doUpdate
-               
-               
-              
-               
-               
-          },
-          {
-              label:'delete'
-              ,size: 'small' 
-              ,type: 'text' 
-               
-              ,icon:  IconDelete
-              ,click: doDelete
-               
-               
-              
-               
-               
-          }
-      ];
+    },
+  ];
 };
-  
 
-    
+const genderDsApi = useApi({
+  method: 'post',
+  localData: [
+    { value: '0', label: 'male' },
+    { value: '1', label: 'female' },
+  ],
 
-
-
-
-
-    
-    const downloadsDsApi = useApi({
-        method: 'post',
-        data: ()=>{
- return conditionFormData;
- },
-        responseType: 'blob',                            
-                    
-    }, {
-        onSuccess: (data, params) => {
-  const fileName = 'EmployeeMst.xlsx';
-    // download
-  VueUtil.saveAs(data,fileName);
-},
-    });
-    const downloadsDs = downloadsDsApi.data;
-    const downloadDsApi = useApi({
-        method: 'post',
-        data: ()=>{
- return conditionFormData;
- },
-        responseType: 'blob',                            
-                    
-    }, {
-        onSuccess: (data, params) => {
-  const fileName = 'EmployeeMst.xlsx';
-    // download
-  VueUtil.saveAs(data,fileName);
-},
-    });
-    const downloadDs = downloadDsApi.data;
-    const employeeListApi = useApi({
-        url: '/employee/getEmployeeMstList',
-        method: 'post',
-        data: ()=>{
-    conditionFormData.pageSize=viy2TablePageSize.value;
-    conditionFormData.currentPage=viy2TableCurrentPage.value;
+});
+const genderDs = genderDsApi.data;
+const employeeListApi = useApi({
+  url: '/employee/getEmployeeMstListPageable',
+  method: 'post',
+  data: () => {
+    conditionFormData.pageSize = viy2TablePageSize.value;
+    conditionFormData.currentPage = viy2TableCurrentPage.value;
     return conditionFormData;
-},
-                    
-    }, {
-        manual: true,
+  },
+
+}, {
+  onSuccess: (data, params) => {
+    showSuccessMessage(t('M.E.000005', [data.totalElements]));
+  },
+
+  initialData: {
+    content: [],
+  },
+  manual: true,
+});
+const employeeList = employeeListApi.data;
+const updateDsApi = useApi({
+  url: '/employee/updateEmployeeMst',
+  method: 'post',
+  data: () => {
+    return detailFormData;
+  },
+
+}, {
+  onSuccess: (data, params) => {
+    VueNotification({
+      title: 'Success',
+      message: 'Save Success',
+      type: 'success',
     });
-    const employeeList = employeeListApi.data;
-    const downloadpdfDSApi = useApi({
-        method: 'post',
-        responseType: 'blob',                            
-                    
-    }, {
-        onSuccess: (data, params) => {
+    detailVisible.value = false;
+    employeeListApi.runAsync();
+  },
+  manual: true,
+});
+const updateDs = updateDsApi.data;
+const downloadDsApi = useApi({
+  url: '/employee/downloadExcel',
+  method: 'post',
+  data: () => {
+    return conditionFormData;
+  },
+  responseType: 'blob',
 
-  const fileName = 'EmployeeMst.pdf';
+}, {
+  onSuccess: (data, params) => {
+    const fileName = 'EmployeeMst.xlsx';
 
-  // download
-  VueUtil.saveAs(data, fileName);
-},
+    // download
+    VueUtil.saveAs(data, fileName);
+  },
+  manual: true,
+});
+const downloadDs = downloadDsApi.data;
+const deleteDsApi = useApi({
+  url: '/employee/deleteEmployeeMst',
+  method: 'post',
+
+}, {
+  onSuccess: (data, params) => {
+    VueNotification({
+      title: 'Success',
+      message: 'Delete Success',
+      type: 'success',
     });
-    const downloadpdfDS = downloadpdfDSApi.data;
+    employeeListApi.runAsync();
+  },
+  manual: true,
+});
+const deleteDs = deleteDsApi.data;
+const groupDsApi = useApi({
+  url: '/employee/groupMstFile',
+  method: 'post',
+  data: {},
 
+});
+const groupDs = groupDsApi.data;
+const downloadpdfDSApi = useApi({
+  url: '/employee/downloadpdf',
+  method: 'post',
+  data: () => {
+    return conditionFormData;
+  },
+  responseType: 'blob',
 
-const viy2Button_HRUAXClick = () => {
-    if (!conditionForm.value) {
-        return;
-    }
-    // Call query API(Writing method:DatasetId +Api.runAsync)
-     employeeListApi.runAsync();
+}, {
+  onSuccess: (data, params) => {
+    const fileName = 'EmployeeMst.pdf';
+
+    // download
+    VueUtil.saveAs(data, fileName);
+  },
+  manual: true,
+});
+const downloadpdfDS = downloadpdfDSApi.data;
+const saveDsApi = useApi({
+  url: '/employee/insertEmployeeMst',
+  method: 'post',
+  data: () => {
+    return detailFormData;
+  },
+
+}, {
+  onSuccess: (data, params) => {
+    VueNotification({
+      title: 'Success',
+      message: 'Save Success',
+      type: 'success',
+    });
+    detailVisible.value = false;
+    employeeListApi.runAsync();
+  },
+  manual: true,
+});
+const saveDs = saveDsApi.data;
+
+const searchBtnClick = () => {
+  if (!conditionForm.value) {
+    return;
+  }
+
+  // Call query API(Writing method:DatasetID + Api.runAsync)
+  employeeListApi.runAsync();
 };
-    
-        const viy2Button_HRWV9Click = () => {
-      detailForm.value && detailForm.value.resetFields();
-      updateFlag.value = false;
-      detailVisible.value = true;
+
+const addBtnClick = () => {
+  detailForm.value && detailForm.value.resetFields();
+  updateFlag.value = false;
+  detailVisible.value = true;
 };
-          const viy2Button_74HSsUClick = () => {
+const downloadExcelBtnClick = () => {
   if (employeeList.value.content.length > 0) {
     downloadDsApi.runAsync();
   } else {
     VueNotification({
       title: 'Error',
       message: t('M.E.000003'),
-      position: "top-right",
+      position: 'top-right',
       type: 'error',
     });
   }
 };
-          const viy2Button_74HB0kClick = () => {
-  if (employeeList.value.content.length > 0 ) {
+const downloadPDFBtnClick = () => {
+  if (employeeList.value.content.length > 0) {
     downloadpdfDSApi.runAsync();
   } else {
     VueNotification({
       title: 'Error',
       message: t('M.E.000003'),
-      position: "top-right",
+      position: 'top-right',
       type: 'error',
     });
   }
 };
-          const viy2Table_Hvba2PageCurrentChange = // When flipping pages, retrieve data based on page and size
-() => {
-    if (!conditionForm.value) {
-        return;
-    }
-    if(employeeList.value.length === 0){
-        return;
-    }
-     employeeListApi.runAsync();                          
+const viy2TablePageCurrentChange // When flipping pages, retrieve data based on page and size
+= () => {
+  if (!conditionForm.value) {
+    return;
+  }
+  if (employeeList.value.length === 0) {
+    return;
+  }
+  employeeListApi.runAsync();
 };
-        const viy2Table_Hvba2PageSizeChange = // When flipping pages, retrieve data based on page and size
-() => {
-    if (!conditionForm.value) {
-        return;
-    }
-    if(employeeList.value.length === 0){
-        return;
-    }
-     employeeListApi.runAsync();                          
-};
-  
-
-const viy2Table_Hvba2EmployeeCdEditRender = computed(() => {
-  return {
-    enabled: false,
-    attrs: {
-      
-      
-      textAlign: 'left', 
-      
-      
-      
-      
-      
-      
-      
-      
-    },
-  };                
-});
-
-const viy2Table_Hvba2EmployeeNmEditRender = computed(() => {
-  return {
-    enabled: false,
-    attrs: {
-      
-      
-      textAlign: 'left', 
-      
-      
-      
-      
-      
-      
-      
-      
-    },
-  };                
-});
-
-const viy2Table_Hvba2GroupNmEditRender = computed(() => {
-  return {
-    enabled: false,
-    attrs: {
-      
-      
-      textAlign: 'left', 
-      
-      
-      
-      
-      
-      
-      
-      
-    },
-  };                
-});
-
-const viy2Table_Hvba2JoinDateEditRender = computed(() => {
-  return {
-    enabled: false,
-    attrs: {
-      
-      
-      textAlign: 'left', 
-      
-      
-      
-      
-      
-      
-      
-      
-    },
-  };                
-});
-
-const viy2Table_Hvba2GenderEditRender = computed(() => {
-  return {
-    enabled: false,
-    attrs: {
-      
-      
-      textAlign: 'left', 
-      
-      
-      
-      
-      
-      
-      
-      
-    },
-  };                
-});
-
-const viy2Table_Hvba2EmailEditRender = computed(() => {
-  return {
-    enabled: false,
-    attrs: {
-      
-      
-      textAlign: 'left', 
-      
-      
-      
-      
-      
-      
-      
-      
-    },
-  };                
-});
-  
-  
-  
-  
-        const saveClick = () => {
-    if (!form) {
-        return;
-    }
-    detailForm.value.validate((valid) => {
-        if (valid) {
-            if (updateFlag.value) {
-                updateDsApi.runAsync();
-            } else {
-                saveDsApi.runAsync();
-            }
-        }
-    })
-};
-          const cancelClick = ()=>{
-    detailForm.value.resetFields();
-    detailVisible.value=false;  
+const viy2TablePageSizeChange // When flipping pages, retrieve data based on page and size
+= () => {
+  if (!conditionForm.value) {
+    return;
+  }
+  if (employeeList.value.length === 0) {
+    return;
+  }
+  employeeListApi.runAsync();
 };
 
+const viy2TableEmployeeCdEditRender = computed(() => {
+  return {
+    enabled: false,
+    attrs: {
 
+      textAlign: 'center',
 
+    },
+  };
+});
 
+const viy2TableEmployeeNmEditRender = computed(() => {
+  return {
+    enabled: false,
+    attrs: {
+
+      textAlign: 'center',
+
+    },
+  };
+});
+
+const viy2TableGroupNmEditRender = computed(() => {
+  return {
+    enabled: false,
+    attrs: {
+
+      textAlign: 'left',
+
+    },
+  };
+});
+
+const viy2TableJoinDateEditRender = computed(() => {
+  return {
+    enabled: false,
+    attrs: {
+
+      textAlign: 'center',
+      type: 'dates',
+
+    },
+  };
+});
+const viy2TableGenderFormatter = function (row, columnConfig, cellValue) {
+  if (row.cellValue === '0') {
+    return row.cellValue = 'male';
+  }
+  if (row.cellValue === '1') {
+    return row.cellValue = 'female';
+  }
+};
+
+const viy2TableGenderEditRender = computed(() => {
+  return {
+    enabled: false,
+    attrs: {
+
+      textAlign: 'center',
+
+    },
+  };
+});
+
+const viy2TableMailAddressEditRender = computed(() => {
+  return {
+    enabled: false,
+    attrs: {
+
+      textAlign: 'left',
+
+    },
+  };
+});
+
+const saveBtnClick = () => {
+  if (!form) {
+    return;
+  }
+  detailForm.value.validate((valid) => {
+    if (valid) {
+      if (updateFlag.value) {
+        updateDsApi.runAsync();
+      } else {
+        saveDsApi.runAsync();
+      }
+    }
+  });
+};
+const cancelBtnClick = () => {
+  form.value.resetFields();
+  detailVisible.value = false;
+};
 </script>
-        
+
 <template>
-<VueForm ref="form" :model="formData" v-loading="lockScreen" :style="{ }" >    
-		<VuePanel :title="t('Condition Area')" title-align="left" collapse-icon-position="left" id="conditionArea" ref="conditionArea" >		<template #header>
-            <div  style="width: 100px" >
-                    <VueButton color="#39B0F9" icon-position="left" id="viy2Button_HRUAX" ref="viy2Button_HRUAX" @click="viy2Button_HRUAXClick" :icon="IconSearch" >
-        Search
-</VueButton>
-
-
-
-            </div>
-        </template>
-            
-            <VueForm 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="conditionForm"
-			  ref="conditionForm"
-                                       
-    
-    
-
- :model="conditionFormData" >
-	<VueRow 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="viy2Row_Ha4HQ"
-			  ref="viy2Row_Ha4HQ"
-                                       
-    
-    
-
- >
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:8}"  
->
-        
-    <VueFormItem 
-
-
-  :label="t('JoinDate')"
-
-
-
-    prop="joinDate"
-
-                             
-
-                                 
-
-
-  
->
-    <VueDatePicker 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="joinDate"
-			  ref="joinDate"
-                                       
-    
-	 		v-model="conditionFormData.joinDate"
-    
-
-        
-            
-            
-    />
-    </VueFormItem>
-
-
-</VueCol>
-
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:8}"  
->
-        
-
-    <VueFormItem 
-
-
-  :label="t('EmployeeCd')"
-
-
-
-    prop="employeeCd"
-
-                             
-
-                                 
-
-
-  
->
-    <VueInput 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="employeeCd"
-			  ref="employeeCd"
-                                       
-    
-	 		v-model="conditionFormData.employeeCd"
-    
-
-              
-              
-              
-              
-                  
-            
-              
-
-    >
-
-
-    </VueInput>
-    </VueFormItem>
-
-
-</VueCol>
-
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:8}"  
->
-        
-    <VueFormItem 
-
-
-  :label="t('Gender')"
-
-
-
-    prop="gender"
-
-                             
-
-                                 
-
-
-  
->
-    <VueRadioGroup 
-
-
-                   
-
-                   
-
-                   
-
-                   
-direction="horizontal"
-                   
-
-                   
-
-                   
-              id="gender"
-			  ref="gender"
-                                       
-    
-	 		v-model="conditionFormData.gender"
-    
-
-			  split-size="default"
+  <VueForm ref="form" v-loading="lockScreen" :model="formData" :style="{ }">
+    <VuePanel id="viy2Panel_KEd7N" ref="viy2Panel_KEd7N" :title="t('conditionArea')">
+      <template #header>
+        <div style="width: 300px">
+          <VueRow
+
+            id="viy2Row_KG6RZ"
+            ref="viy2Row_KG6RZ"
+          >
+            <VueCol
+
+              item-key="item"
+
+              align="right"
+
+              :inline="true"
+
+              :md="{ span: 24 }"
+            >
+              <VueButton id="searchBtn" ref="searchBtn" icon-position="left" type="primary" :icon="IconSearch" @click="searchBtnClick">
+                {{ t('search') }}
+              </VueButton>
+            </VueCol>
+          </VueRow>
+        </div>
+      </template>
+
+      <VueForm
+
+        id="conditionForm"
+        ref="conditionForm"
+
+        :model="conditionFormData"
+      >
+        <VueRow
+
+          id="conditionRow"
+          ref="conditionRow"
         >
-          
-               <VueRadio
-	   			v-for = "option in genderOpts"
-                   :key="option.value"
-               	:label="option.value"
-                  	
-                
-                
-               >
-                       {{option.label}}
-               </VueRadio>
+          <VueCol
 
-    </VueRadioGroup>
-    </VueFormItem>
+            item-key="item"
 
+            :md="{ span: 8 }"
+          >
+            <VueFormItem
 
-</VueCol>
+              :label="t('joinDate')"
 
-</VueRow>
+              label-width="100px"
 
-</VueForm>
+              prop="joinDate"
+            >
+              <VueDatePicker
 
-</VuePanel>
+                id="joinDate"
 
-<VuePanel :title="t('Detailed List')" id="detailedList" ref="detailedList" >		<template #header>
-            <div  style="width: 300px" >
-                    <VueButton icon-position="left" color="#29BF00" id="viy2Button_HRWV9" ref="viy2Button_HRWV9" @click="viy2Button_HRWV9Click" :icon="IconPlus" >
-        Add
-</VueButton>
+                ref="joinDate"
+                v-model="conditionFormData.joinDate"
 
-    <VueButton icon-position="left" color="#39B0F9" id="viy2Button_74HSsU" ref="viy2Button_74HSsU" @click="viy2Button_74HSsUClick" :icon="IconDownload" >
-        Excel
-</VueButton>
+                type="daterange"
 
-    <VueButton icon-position="left" color="#39B0F9" id="viy2Button_74HB0k" ref="viy2Button_74HB0k" @click="viy2Button_74HB0kClick" :icon="IconDownload" >
-        PDF
-</VueButton>
+                value-format="YYYYMMDD"
+              />
+            </VueFormItem>
+          </VueCol>
 
+          <VueCol
 
+            item-key="item"
 
-            </div>
-        </template>
-            
-            
+            :md="{ span: 8 }"
+          >
+            <VueFormItem
 
-            
-<VueTable  
+              :label="t('employeeCd')"
 
+              label-width="110px"
 
+              prop="employeeCd"
+            >
+              <VueInput
 
-                   
+                id="employeeCd"
 
-                   
+                ref="employeeCd"
+                v-model="conditionFormData.employeeCd"
 
-                   
+                :clearable="true"
+              />
+            </VueFormItem>
+          </VueCol>
 
-                   
+          <VueCol
 
-                   
-              id="viy2Table_Hvba2"
-			  ref="viy2Table_Hvba2"
-                                       
-    
-    
-        
-      
-      
+            item-key="item"
 
-  	   :data="employeeList.content"
-        
-       :edit-config="viy2Table_Hvba2EditConfig"
-       :mouse-config="viy2Table_Hvba2MouseConfig"
-> 
-    
-<VueInputColumn    
+            :md="{ span: 8 }"
+          >
+            <VueFormItem
 
+              :label="t('gender')"
 
+              label-width="100px"
 
-:edit-render="viy2Table_Hvba2EmployeeCdEditRender"
+              prop="gender"
+            >
+              <VueRadioGroup
 
+                id="gender"
 
+                ref="gender"
+                v-model="conditionFormData.gender"
 
-field="employeeCd"
-                   
-align="left"
-                   
+                direction="horizontal"
 
-                   
+                split-size="default"
+              >
+                <VueRadio
+                  v-for="option in genderOpts"
+                  :key="option.value"
+                  :label="option.value"
+                >
+                  {{ option.label }}
+                </VueRadio>
+              </VueRadioGroup>
+            </VueFormItem>
+          </VueCol>
+        </VueRow>
+      </VueForm>
+    </VuePanel>
 
-                   
-width="200px"
-                   
-:title="t('Employee Cd')"
-                   
-header-align="center"
-                   
-                                       
-    
-    
+    <VuePanel id="viy2Panel_KFRLT" ref="viy2Panel_KFRLT" :title="t('detailsArea')">
+      <template #header>
+        <div style="width: 400px">
+          <VueRow
 
-     
->
+            id="viy2Row_LSq40"
+            ref="viy2Row_LSq40"
+          >
+            <VueCol
 
-        
-</VueInputColumn>
-<VueInputColumn    
+              item-key="item"
 
+              align="right"
 
+              :inline="true"
 
-:edit-render="viy2Table_Hvba2EmployeeNmEditRender"
+              :md="{ span: 24 }"
+            >
+              <VueButton id="addBtn" ref="addBtn" icon-position="left" type="success" :icon="IconPlus" @click="addBtnClick">
+                {{ t('add') }}
+              </VueButton>
 
+              <VueButton id="downloadExcelBtn" ref="downloadExcelBtn" icon-position="left" type="primary" :icon="IconDownload" @click="downloadExcelBtnClick">
+                {{ t('downloadExcel') }}
+              </VueButton>
 
+              <VueButton id="downloadPDFBtn" ref="downloadPDFBtn" icon-position="left" type="primary" :icon="IconDownload" @click="downloadPDFBtnClick">
+                {{ t('downloadPDF') }}
+              </VueButton>
+            </VueCol>
+          </VueRow>
+        </div>
+      </template>
 
-field="employeeNm"
-                   
-align="left"
-                   
+      <VueTable
 
-                   
+        id="viy2Table"
 
-                   
-width="200px"
-                   
-:title="t('Employee Nm')"
-                   
-header-align="center"
-                   
-                                       
-    
-    
+        ref="viy2Table"
+        height="550px"
 
-     
->
+        :data="employeeList.content"
 
-        
-</VueInputColumn>
-<VueInputColumn    
+        :edit-config="viy2TableEditConfig"
+        :mouse-config="viy2TableMouseConfig"
+      >
+        <VueInputColumn
 
+          :edit-render="viy2TableEmployeeCdEditRender"
 
+          field="employeeCd"
 
-:edit-render="viy2Table_Hvba2GroupNmEditRender"
+          align="center"
 
+          :sortable="true"
 
+          width="200px"
 
-field="groupNm"
-                   
-align="left"
-                   
+          :title="t('employeeCd')"
 
-                   
+          header-align="center"
+        />
+        <VueInputColumn
 
-                   
-width="200px"
-                   
-:title="t('Group Nm')"
-                   
-header-align="center"
-                   
-                                       
-    
-    
+          :edit-render="viy2TableEmployeeNmEditRender"
 
-     
->
+          field="employeeNm"
 
-        
-</VueInputColumn>
-<VueInputColumn    
+          align="center"
 
+          width="200px"
 
+          :title="t('employeeNm')"
 
-:edit-render="viy2Table_Hvba2JoinDateEditRender"
+          header-align="center"
+        />
+        <VueInputColumn
 
+          :edit-render="viy2TableGroupNmEditRender"
 
+          field="groupNm"
 
-field="joinDate"
-                   
-align="left"
-                   
+          align="left"
 
-                   
+          width="200px"
 
-                   
-width="200px"
-                   
-:title="t('JoinDate')"
-                   
-header-align="center"
-                   
-                                       
-    
-    
+          :title="t('groupNm')"
 
-     
->
+          header-align="center"
+        />
+        <VueDateTimeColumn
 
-        
-</VueInputColumn>
-<VueInputColumn    
+          :edit-render="viy2TableJoinDateEditRender"
 
+          field="joinDate"
 
+          align="center"
 
-:edit-render="viy2Table_Hvba2GenderEditRender"
+          width="200px"
 
+          :title="t('joinDate')"
 
+          header-align="center"
+        />
+        <VueInputColumn
 
-field="gender"
-                   
-align="left"
-                   
+          :formatter="viy2TableGenderFormatter"
 
-                   
+          :edit-render="viy2TableGenderEditRender"
 
-                   
-width="200px"
-                   
-:title="t('Gender')"
-                   
-header-align="center"
-                   
-                                       
-    
-    
+          field="gender"
 
-     
->
+          align="center"
 
-        
-</VueInputColumn>
-<VueInputColumn    
+          width="200px"
 
+          :title="t('gender')"
 
+          header-align="center"
+        />
+        <VueInputColumn
 
-:edit-render="viy2Table_Hvba2EmailEditRender"
+          :edit-render="viy2TableMailAddressEditRender"
 
+          field="mailAddress"
 
+          align="left"
 
-field="email"
-                   
-align="left"
-                   
+          width="200px"
 
-                   
+          :title="t('mailAddress')"
 
-                   
-width="200px"
-                   
-:title="t('Email')"
-                   
-header-align="center"
-                   
-                                       
-    
-    
+          header-align="center"
+        />
 
-     
->
+        <VueButtonColumn
 
-        
-</VueInputColumn>
+          align="center"
 
-  <VueButtonColumn
+          :title="t('operate')"
 
+          header-align="center"
 
-align="center"
-                   
+          width="130px"
 
-                   
+          :buttons="viy2TableOperateButtons"
+        />
+      </VueTable>
+      <VuePagination
+        ref="viy2TablePagination"
 
-                   
-width="200px"
-                   
-header-align="center"
-                   
-:title="t('operate')"
-                   
+        v-model:current-page="viy2TableCurrentPage"
+        v-model:page-size="viy2TablePageSize"
+        layout="total, sizes, prev, pager, next, jumper"
 
-                   
-                                       
-    
-    
+        :total="get(employeeList, 'totalElements')"
 
-           :buttons="viy2Table_Hvba2OperateButtons"
-  />
+        @current-change="viy2TablePageCurrentChange"
+        @size-change="viy2TablePageSizeChange"
+      />
+    </VuePanel>
 
+    <VueAside
+      id="viy2Aside"
 
-</VueTable>
-    <VuePagination
-      ref="viy2Table_Hvba2Pagination"
-      
-      layout="total,sizes,prev,pager,next,"
-      v-model:current-page="viy2Table_Hvba2CurrentPage"
-    	v-model:page-size="viy2Table_Hvba2PageSize"
-      
-        :total="get(employeeList,'totalElemants')"
+      ref="viy2Aside"
 
+      v-model="detailVisible"
+      :show-close="true"
+    >
+      <VueForm
 
-      
-            @current-change="viy2Table_Hvba2PageCurrentChange"
-            @size-change="viy2Table_Hvba2PageSizeChange"
-     />
+        id="detailForm"
+        ref="detailForm"
 
+        :model="detailFormData"
+      >
+        <VuePanel id="viy2Panel_MdFgd" ref="viy2Panel_MdFgd" :title="t('detail')">
+          <VueFormItem
 
-</VuePanel>
+            v-show="false"
 
-<VueAside v-model="detailvisible" 
+            :label="t('companyCd')"
 
+            label-width="104px"
 
-                   
-:modal="true"
-                   
-              id="viy2Aside"
-			  ref="viy2Aside"
-                                       
-    
-    
+            prop="companyCd"
+          >
+            <VueInput
 
- >
-
-
-
-            <VueForm 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="detailForm"
-			  ref="detailForm"
-                                       
-    
-    
-
- :model="detailFormData" >
-	<VuePanel :title="t('Detail')" title-align="left" :collapse="true" id="detail" ref="detail" >            
-            <VueRow 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="viy2Row_IETqp"
-			  ref="viy2Row_IETqp"
-                                       
-    
-    
-
- >
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:24}"  
->
-        
-
-    <VueFormItem 
-
-
-  :label="t('Company Cd')"
-
-
-
-    prop="datafieldviy2InputBox_IFaWa"
-
-                             
-
-                                 
-
-
-  
->
-    <VueInput 
-
-
-                   
-
-                   
-
-                   
-
-                   
               id="companyCd"
-			  ref="companyCd"
-                                       
-    
-	 		v-model="detailFormData.datafieldviy2InputBox_IFaWa"
-    
+              ref="companyCd"
 
-              
-              
-              
-              
-                  
-            
-              
+              v-model="detailFormData.companyCd"
+            />
+          </VueFormItem>
 
-    >
+          <VueFormItem
 
+            :label="t('employeeCd')"
 
-    </VueInput>
-    </VueFormItem>
+            label-width="104px"
 
+            prop="employeeCd"
 
-</VueCol>
+            :rules="rules.viy2InputBox_1gKHrERules"
+          >
+            <VueInput
 
-</VueRow>
+              id="viy2InputBox_1gKHrE"
 
-            <VueRow 
+              ref="viy2InputBox_1gKHrE"
 
+              v-model="detailFormData.employeeCd"
 
-                   
+              :clearable="true"
+              :maxlength="7"
 
-                   
+              :disabled="updateFlag"
+            />
+          </VueFormItem>
 
-                   
+          <VueFormItem
 
-                   
-              id="viy2Row_7cFC2O"
-			  ref="viy2Row_7cFC2O"
-                                       
-    
-    
+            :label="t('employeeNm')"
 
- >
-          <VueCol 
+            label-width="106px"
 
-item-key="item"
-                   
+            prop="employeeNm"
+          >
+            <VueInput
 
-                   
+              id="viy2InputBox_7zeCIo"
 
-                   
+              ref="viy2InputBox_7zeCIo"
 
-                   
+              v-model="detailFormData.employeeNm"
+              :clearable="true"
 
-                   
-                                       
-    
-    
+              :maxlength="20"
+            />
+          </VueFormItem>
 
- 
-	:md="{span:24}"  
->
-        
+          <VueFormItem
 
-    <VueFormItem 
+            :label="t('joinDate')"
 
+            label-width="104px"
 
-  :label="t('Employee Cd')"
+            prop="joinDate"
+          >
+            <VueDatePicker
 
+              id="viy2DateTimePicker_XCKaH"
 
+              ref="viy2DateTimePicker_XCKaH"
+              v-model="detailFormData.joinDate"
 
-    prop="datafieldviy2InputBox_IFaWa"
+              type="date"
+            />
+          </VueFormItem>
 
-  :rules="rules.detailEmployeeCdRules"
-                             
+          <VueFormItem
 
-                                 
+            :label="t('groupCd')"
 
+            label-width="104px"
 
-  
->
-    <VueInput 
+            prop="groupCd"
 
+            :rules="rules.groupCdRules"
+          >
+            <VueSelect
 
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-              id="detailEmployeeCd"
-			  ref="detailEmployeeCd"
-                                       
-    
-	 		v-model="detailFormData.datafieldviy2InputBox_IFaWa"
-    
-
-              
-              
-              
-              
-                  
-            
-              
-
-    >
-
-
-    </VueInput>
-    </VueFormItem>
-
-
-</VueCol>
-
-</VueRow>
-
-            <VueRow 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="viy2Row_7cFAxA"
-			  ref="viy2Row_7cFAxA"
-                                       
-    
-    
-
- >
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:24}"  
->
-        
-
-    <VueFormItem 
-
-
-  :label="t('Employee Nm')"
-
-
-
-    prop="datafieldviy2InputBox_IFaWa"
-
-                             
-
-                                 
-
-
-  
->
-    <VueInput 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="detailEmployeeNm"
-			  ref="detailEmployeeNm"
-                                       
-    
-	 		v-model="detailFormData.datafieldviy2InputBox_IFaWa"
-    
-
-              
-              
-              
-              
-                  
-            
-              
-
-    >
-
-
-    </VueInput>
-    </VueFormItem>
-
-
-</VueCol>
-
-</VueRow>
-
-            <VueRow 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="viy2Row_7cFz6I"
-			  ref="viy2Row_7cFz6I"
-                                       
-    
-    
-
- >
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:24}"  
->
-        
-    <VueFormItem 
-
-
-  :label="t('JoinDate')"
-
-
-
-    prop="datafieldviy2DateTimePicker_II595"
-
-                             
-
-                                 
-
-
-  
->
-    <VueDatePicker 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="detailJoinDate"
-			  ref="detailJoinDate"
-                                       
-    
-	 		v-model="detailFormData.datafieldviy2DateTimePicker_II595"
-    
-
-        
-            
-            
-    />
-    </VueFormItem>
-
-
-</VueCol>
-
-</VueRow>
-
-            <VueRow 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="viy2Row_7cFxwu"
-			  ref="viy2Row_7cFxwu"
-                                       
-    
-    
-
- >
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:24}"  
->
-        
-    <VueFormItem 
-
-
-  :label="t('GroupCd')"
-
-
-
-    prop="datafieldviy2Select_IIkUm"
-
-                             
-
-                                 
-
-
-  
->
-    <VueSelect
-
-
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-
-                   
               id="groupCd"
-			  ref="groupCd"
-                                       
-    
-	 		v-model="detailFormData.datafieldviy2Select_IIkUm"
-    
 
-            :options="groupCdOpts"
+              ref="groupCd"
+              v-model="detailFormData.groupCd"
 
-          
-          
-          
-    >
-            
-            
-    </VueSelect>
-    </VueFormItem>
+              :clearable="true"
 
+              :options="groupDs"
 
-</VueCol>
+              :props="{
+                label: 'groupNm',
+                value: 'groupCd',
 
-</VueRow>
+              }"
+            />
+          </VueFormItem>
 
-            <VueRow 
+          <VueFormItem
 
+            :label="t('gender')"
 
-                   
+            label-width="104px"
 
-                   
+            prop="gender"
+          >
+            <VueRadioGroup
 
-                   
+              id="viy2Radio_L4DEv"
 
-                   
-              id="viy2Row_7cFvXI"
-			  ref="viy2Row_7cFvXI"
-                                       
-    
-    
+              ref="viy2Radio_L4DEv"
+              v-model="detailFormData.gender"
 
- >
-          <VueCol 
+              direction="horizontal"
 
-item-key="item"
-                   
+              split-size="default"
+            >
+              <VueRadio
+                v-for="option in genderDs"
+                :key="option.value"
+                :label="option.value"
+                :name="option.name"
+                :disabled="option.disabled"
+              >
+                {{ option.label }}
+              </VueRadio>
+            </VueRadioGroup>
+          </VueFormItem>
 
-                   
+          <VueFormItem
 
-                   
+            :label="t('mailAddress')"
 
-                   
+            label-width="104px"
 
-                   
-                                       
-    
-    
+            prop="mailAddress"
 
- 
-	:md="{span:24}"  
->
-        
-    <VueFormItem 
+            :rules="rules.viy2InputBox_L4QZwRules"
+          >
+            <VueInput
 
+              id="viy2InputBox_L4QZw"
 
-  :label="t('Gender')"
+              ref="viy2InputBox_L4QZw"
+              v-model="detailFormData.mailAddress"
 
+              :maxlength="40"
+            />
+          </VueFormItem>
 
+          <VueRow
 
-    prop="datafieldviy2Radio_IIxiA"
+            id="viy2Row_7Xunbi"
+            ref="viy2Row_7Xunbi"
+          >
+            <VueCol
 
-                             
+              item-key="item"
 
-                                 
+              align="center"
 
+              :inline="true"
 
-  
->
-    <VueRadioGroup 
+              :md="{ span: 24 }"
+            >
+              <VueButton id="saveBtn" ref="saveBtn" icon-position="left" type="success" :icon="IconCheck" @click="saveBtnClick">
+                {{ t('save') }}
+              </VueButton>
 
-
-                   
-
-                   
-
-                   
-
-                   
-direction="horizontal"
-                   
-
-                   
-
-                   
-              id="detailGender"
-			  ref="detailGender"
-                                       
-    
-	 		v-model="detailFormData.datafieldviy2Radio_IIxiA"
-    
-
-			  split-size="default"
-        >
-          
-               <VueRadio
-	   			v-for = "option in detailGenderOpts"
-                   :key="option.value"
-               	:label="option.value"
-                  	
-                
-                
-               >
-                       {{option.label}}
-               </VueRadio>
-
-    </VueRadioGroup>
-    </VueFormItem>
-
-
-</VueCol>
-
-</VueRow>
-
-            <VueRow 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="viy2Row_7cEufe"
-			  ref="viy2Row_7cEufe"
-                                       
-    
-    
-
- >
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:24}"  
->
-        
-
-    <VueFormItem 
-
-
-  :label="t('Email')"
-
-
-
-    prop="datafieldviy2InputBox_IFaWa"
-
-                             
-
-                                 
-
-
-  
->
-    <VueInput 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="email"
-			  ref="email"
-                                       
-    
-	 		v-model="detailFormData.datafieldviy2InputBox_IFaWa"
-    
-
-              
-              
-              
-              
-                  
-            
-              
-
-    >
-
-
-    </VueInput>
-    </VueFormItem>
-
-
-</VueCol>
-
-</VueRow>
-
-            <VueRow 
-
-
-                   
-
-                   
-
-                   
-
-                   
-              id="viy2Row_7dfh6W"
-			  ref="viy2Row_7dfh6W"
-                                       
-    
-    
-
- >
-          <VueCol 
-
-item-key="item"
-                   
-
-                   
-
-                   
-
-                   
-
-                   
-                                       
-    
-    
-
- 
-	:md="{span:24}"  
->
-        <VueButton icon-position="left" color="#29BF00" id="save" ref="save" @click="saveClick" :icon="IconCheck" >
-        Save
-</VueButton>
-
-        <VueButton icon-position="left" color="#39B0F9" id="cancel" ref="cancel" @click="cancelClick" :icon="IconClose" >
-        Cancel
-</VueButton>
-
-</VueCol>
-
-</VueRow>
-
-</VuePanel>
-
-
-</VueForm>
-
-
-
-</VueAside>
-
-
-        </VueForm>
+              <VueButton id="cancelBtn" ref="cancelBtn" icon-position="left" type="warning" :icon="IconClose" @click="cancelBtnClick">
+                {{ t('cancel') }}
+              </VueButton>
+            </VueCol>
+          </VueRow>
+        </VuePanel>
+      </VueForm>
+    </VueAside>
+  </VueForm>
 </template>
-
-
-
-
-
-[{"line":843,"column":0,"message":"Parsing error: '}' expected."}]

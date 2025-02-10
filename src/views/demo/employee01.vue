@@ -452,7 +452,7 @@ const cancelBtnClick = () => {
 
 <template>
   <VueForm ref="form" v-loading="lockScreen" :model="formData" :style="{ }">
-    <VuePanel id="viy2Panel_KEd7N" ref="viy2Panel_KEd7N" :title="t('conditionArea')">
+    <VuePanel id="viy2Panel_KEd7N" ref="viy2Panel_KEd7N" :title="t('ConditionArea')">
       <template #header>
         <div style="width: 300px">
           <VueRow

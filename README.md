@@ -66,11 +66,8 @@ Edit the package.json file to update the project information with your own detai
 Run ```pnpm run dev``` to start app.
 Access ```http://localhost:5000/``` to view the page.
 
-### Login
-By default, the login process will use the login API of solid backend. Please confirm that the backend has been properly configured and started. The default username and password are `admin` and `user`.
-
 ### Dummy login
-If you temporally don't have backend API for login, you can add following settings in `menuSetting.js` to enable dummy login.
+if you temporally don't have backend API for login, you can add following settings in `menuSetting.js` to enable dummy login.
 
 ```javascript
 const { login, logout, getUserInfo, getMenusByEnv } = new YnaG3SystemAdapter({
